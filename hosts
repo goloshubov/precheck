@@ -1,0 +1,23 @@
+[source]
+localhost
+#node1
+#node2
+#node3
+
+[target]
+host.example.com
+#newnode1
+#newnode2
+#newnode3
+
+[all:vars]
+##tcp udp checks
+#tcp_ports=[53,443]
+#udp_ports=[53]
+#run_listeners=True
+##do_cleanup=True
+##curl checks
+#do_curl=False
+##curl_protocol="https"
+##curl_opts="-k -m5"
+##curl_ports=[443]
