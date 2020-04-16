@@ -86,4 +86,4 @@ $ cat targetdata | while IFS=';' read -r hosts ports; do ansible-playbook -i ./s
 ```
 \
 \
-Adding display_skipped_hosts = no to ansible.cfg default section makes plays output more readable.
+To make plays output more readable add display_skipped_hosts = no into ansible.cfg default section.
