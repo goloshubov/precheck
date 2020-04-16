@@ -84,5 +84,6 @@ $ cat /path/targetdata
 ```bash
 $ cat targetdata | while IFS=';' read -r hosts ports; do ansible-playbook -i ./sourcehosts portchecker.yaml -e "{target_list: [ $hosts ]}" -e "{tcp_ports: [ $ports ]}"; done
 ```
-
+\
+\
 Adding display_skipped_hosts = no to ansible.cfg default section makes plays output more readable.
