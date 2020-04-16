@@ -82,5 +82,5 @@ $ cat /path/targetdata
 192.168.1.6;22
 ```
 ```bash
-$ cat targetdata | while IFS=';' read -r hosts ports; do ansible-playbook -i ./hosts portchecker.yaml -e "{target_list: [ $hosts ]}" -e "{tcp_ports: [ $ports ]}"; done
+$ cat targetdata | while IFS=';' read -r hosts ports; do ansible-playbook -i ./sourcehosts portchecker.yaml -e "{target_list: [ $hosts ]}" -e "{tcp_ports: [ $ports ]}"; done
 ```
