@@ -76,11 +76,11 @@ $ ansible-playbook portchecker.yaml -i ./hosts -e '{source_list: [sourcehostA, s
 ```
 - batch run
 ```bash
-$ cat /path/targetdata-ipport
+$ cat /path/targetdata
 192.168.1.1,192.168.1.2,192.168.1.3;123,53,8080
 192.168.1.4,192.168.1.5;9090,10050
 192.168.1.6;22
 ```
 ```bash
-$ cat targetdata-ipport | while IFS=';' read -r hosts ports; do ansible-playbook -i ./hosts portchecker.yaml -e "{target_list: [ $hosts ]}" -e "{tcp_ports: [ $ports ]}"; done
+$ cat targetdata | while IFS=';' read -r hosts ports; do ansible-playbook -i ./hosts portchecker.yaml -e "{target_list: [ $hosts ]}" -e "{tcp_ports: [ $ports ]}"; done
 ```
