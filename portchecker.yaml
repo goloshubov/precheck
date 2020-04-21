@@ -1,7 +1,6 @@
 ---
 
 #run listeners on target nodes if needed (when run_listeners == True)
-##  when _list variables is used for 'hosts:' the list items (hosts) should be matched with inventory hosts (group doesn't matter in this case). Means the hosts should be in inventory. Otherwise tasks will be skipped (but it's ok for using target_list with no running listeners).
 - name: run listeners
   hosts: "{{ target_list is defined | ternary( target_list , target_groupname | default('target')) }}"
   gather_facts: no
