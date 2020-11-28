@@ -53,7 +53,11 @@
       when: do_curl is defined and do_curl == True
       loop: "{{ target_nodes|product(curl_ports|default([443]))|list }}"      
       register: curl_get
-      ignore_errors: yes       
+      ignore_errors: yes
+    - name: ping (ICMP) check
+      shell: ping -f -c 10 {{ item }}
+      when: do_ping is definded and do_ping == True
+      loop: "{{ target_nodes }}"
 
       #set host facts on check errors
     - set_fact:
