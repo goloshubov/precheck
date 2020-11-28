@@ -31,6 +31,7 @@ do_curl=False
 curl_protocol="https" (default)
 curl_opts="-k -m5" (default)
 curl_ports=[443]   (default)
+do_ping=False
 ```
 
 Define 'source' and 'target' groups, and all needed variable ([all:vars] section) in the inventory file and run the play:
@@ -49,6 +50,10 @@ $ ansible-playbook -i ./hosts portchecker.yaml -v -e do_curl=True
 - the same as above but with custom host groups (and from different inventories)
 ```bash
 $ ansible-playbook -i ./hosts1 -i ./hosts2 portchecker.yaml -v -e do_curl=True -e source_groupname=source1 -e target_groupname=target2
+```
+- ping (ICMP)
+```bash
+$ ansible-playbook -i ./hosts portchecker.yaml -v -e do_ping=True'
 ```
 - curl check, http (80)
 ```bash
