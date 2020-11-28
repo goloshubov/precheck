@@ -24,9 +24,9 @@
 
 
   #check ports on target nodes from source nodes (tcp/udp, http)
-- name: run port checks
+- name: run checks
   hosts: "{{ source_list is defined | ternary( source_list , source_groupname | default('source')) }}"
-  gather_facts: no
+  gather_facts: no 
   become_method: sudo
   vars:
     target_nodes:  "{{ target_list is defined | ternary( target_list , groups[target_groupname | default('target')] ) }}"
@@ -36,7 +36,13 @@
         tcp_error: False
         udp_error: False
         curl_error: False
-        
+        ping_error: False
+
+    - name: Show facts available on the system
+      ansible.builtin.debug:
+        var: do_ping 
+
+
       #run checks with nc or curl
     - name: check tcp ports
       shell: nc -z {{ item.0 }} {{ item.1 }}
@@ -50,14 +56,16 @@
       ignore_errors: yes
     - name: curl check
       shell: curl {{ curl_opts | default("-k -m5") }} {{ curl_protocol | default("https") }}://{{ item.0 }}:{{ item.1 }}
-      when: do_curl is defined and do_curl == True
+      when: do_curl is defined and do_curl
       loop: "{{ target_nodes|product(curl_ports|default([443]))|list }}"      
       register: curl_get
       ignore_errors: yes
     - name: ping (ICMP) check
-      shell: ping -f -c 10 {{ item }}
-      when: do_ping is defined and do_ping == True
+      shell: ping -c 3 {{ item }}
+      when: do_ping is defined and do_ping
       loop: "{{ target_nodes }}"
+      register: ping_retval
+      ignore_errors: yes
 
       #set host facts on check errors
     - set_fact:
@@ -70,8 +78,12 @@
       loop: "{{ nc_udp.results }}"
     - set_fact:
         curl_error: True
-      when: (do_curl is defined and do_curl == True) and item.rc != 0
+      when: (do_curl is defined and do_curl) and item.rc != 0
       loop: "{{ curl_get.results }}"      
+    - set_fact:
+        ping_error: True
+      when: (do_ping is defined and do_ping) and item.rc != 0
+      loop: "{{ ping_retval.results }}"      
 
       #print failed checks
     - name: show tcp failed ports
@@ -87,8 +99,13 @@
     - name: show failed curl gets
       debug:
         msg: "FAILED CURL: the curl command ({{ item.cmd }}) has failed"
-      when: (do_curl is defined and do_curl == True) and item.rc != 0
+      when: (do_curl is defined and do_curl) and item.rc != 0
       loop: "{{ curl_get.results }}"      
+    - name: show failed pings
+      debug:
+        msg: "FAILED PING: the ping command ({{ item.cmd }}) has failed"
+      when: (do_ping is defined and do_ping) and item.rc != 0
+      loop: "{{ ping_retval.results }}"      
 
 
   #cleanup if listeners were used. can be skipped with do_cleanup=False
@@ -100,7 +117,7 @@
     - name: cleanup nc (kills only nc listeners)
       shell: pkill -f -9 'nc -l'
       ignore_errors: yes
-      when: (do_cleanup is defined and do_cleanup == True) or (do_cleanup is undefined and run_listeners is defined and run_listeners == True)
+      when: (do_cleanup is defined and do_cleanup) or (do_cleanup is undefined and run_listeners is defined and run_listeners)
 
 
   # fail if there were errors during the checks
@@ -110,4 +127,6 @@
   tasks:
     - fail:
         msg: "FAILED"
-      when: hostvars[inventory_hostname]['tcp_error'] == True or hostvars[inventory_hostname]['udp_error'] == True or hostvars[inventory_hostname]['curl_error'] == True
+      when: hostvars[inventory_hostname]['tcp_error'] == True or hostvars[inventory_hostname]['udp_error'] == True or hostvars[inventory_hostname]['curl_error'] == True or hostvars[inventory_hostname]['ping_error'] == True
+
+
