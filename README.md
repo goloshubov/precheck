@@ -34,7 +34,7 @@ curl_ports=[443]   (default)
 do_ping=False
 ```
 
-Define 'source' and 'target' groups, and all needed variable ([all:vars] section) in the inventory file and run the play:
+Define 'source' and 'target' groups, and all needed variables ([all:vars] section) in the inventory file and run the play:
 ```bash
 $ ansible-playbook -i ./hosts portchecker.yaml -v
 ```
