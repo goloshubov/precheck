@@ -79,7 +79,7 @@ $ ansible-playbook portchecker.yaml -i '' -e '{source_list: [localhost]}' -e '{t
 ```bash
 $ ansible-playbook portchecker.yaml -i ./hosts -e '{source_list: [sourcehostA, sourcehostB]}' -e '{target_list: [192.168.1.100,192.168.2.200]}' -e '{tcp_ports: [22]}'
 ```
-- batch run
+- batch run (in the example below it is a list of target hosts with specific ports)
 ```bash
 $ cat /path/targetdata
 192.168.1.1,192.168.1.2,192.168.1.3;123,53,8080
