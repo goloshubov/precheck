@@ -38,6 +38,10 @@ Define 'source' and 'target' groups, and all needed variable ([all:vars] section
 ```bash
 $ ansible-playbook -i ./hosts portchecker.yaml -v
 ```
+- ping (ICMP)
+```bash
+$ ansible-playbook -i ./hosts portchecker.yaml -v -e do_ping=True'
+```
 Or use extra variables instead, or combination of both:
 - tcp port check, TCP 80,443
 ```bash
@@ -50,10 +54,6 @@ $ ansible-playbook -i ./hosts portchecker.yaml -v -e do_curl=True
 - the same as above but with custom host groups (and from different inventories)
 ```bash
 $ ansible-playbook -i ./hosts1 -i ./hosts2 portchecker.yaml -v -e do_curl=True -e source_groupname=source1 -e target_groupname=target2
-```
-- ping (ICMP)
-```bash
-$ ansible-playbook -i ./hosts portchecker.yaml -v -e do_ping=True'
 ```
 - curl check, http (80)
 ```bash
