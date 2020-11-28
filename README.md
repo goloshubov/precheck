@@ -1,4 +1,4 @@
-Portchecker is an ansible playbook that helps with bulk TCP/UDP/HTTP(S) availability checks. For example, it can be used as a deploy prerequisite step, to see if all necessary firewall rules were set and communication is possible.
+Portchecker is an ansible playbook that helps with bulk ICMP/TCP/UDP/HTTP(S) availability checks. For example, it can be used as a deploy prerequisite step, to see if all necessary firewall rules were set and communication is possible.
 
 How it works. Each host from 'source' inventory group tries communicating with each host from 'target' inventory group, using netcat (nc) in case of tcp_ports or/and udp_ports are defined, and using curl in case of curl_ports and do_curl are defined. Some cases without using inventory are also possible, see examples below.
 
@@ -31,6 +31,7 @@ do_curl=False
 curl_protocol="https" (default)
 curl_opts="-k -m5" (default)
 curl_ports=[443]   (default)
+do_ping=False
 ```
 
 Define 'source' and 'target' groups, and all needed variable ([all:vars] section) in the inventory file and run the play:
@@ -38,6 +39,10 @@ Define 'source' and 'target' groups, and all needed variable ([all:vars] section
 $ ansible-playbook -i ./hosts portchecker.yaml -v
 ```
 Or use extra variables instead, or combination of both:
+- ping (ICMP)
+```bash
+$ ansible-playbook -i ./hosts portchecker.yaml -v -e do_ping=True
+```
 - tcp port check, TCP 80,443
 ```bash
 $ ansible-playbook -i ./hosts portchecker.yaml -v -e '{tcp_ports: [80,443]}'
