@@ -41,7 +41,7 @@ $ ansible-playbook -i ./hosts portchecker.yaml -v
 Or use extra variables instead, or combination of both:
 - ping (ICMP)
 ```bash
-$ ansible-playbook -i ./hosts portchecker.yaml -v -e do_ping=True'
+$ ansible-playbook -i ./hosts portchecker.yaml -v -e do_ping=True
 ```
 - tcp port check, TCP 80,443
 ```bash
