@@ -38,12 +38,7 @@
         curl_error: False
         ping_error: False
 
-    - name: Show facts available on the system
-      ansible.builtin.debug:
-        var: do_ping 
-
-
-      #run checks with nc or curl
+      #run checks
     - name: check tcp ports
       shell: nc -z {{ item.0 }} {{ item.1 }}
       loop: "{{ target_nodes|product(tcp_ports|default([]))|list }}"
