@@ -56,7 +56,7 @@
       ignore_errors: yes
     - name: ping (ICMP) check
       shell: ping -f -c 10 {{ item }}
-      when: do_ping is definded and do_ping == True
+      when: do_ping is defined and do_ping == True
       loop: "{{ target_nodes }}"
 
       #set host facts on check errors
