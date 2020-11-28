@@ -38,11 +38,11 @@ Define 'source' and 'target' groups, and all needed variable ([all:vars] section
 ```bash
 $ ansible-playbook -i ./hosts portchecker.yaml -v
 ```
+Or use extra variables instead, or combination of both:
 - ping (ICMP)
 ```bash
 $ ansible-playbook -i ./hosts portchecker.yaml -v -e do_ping=True'
 ```
-Or use extra variables instead, or combination of both:
 - tcp port check, TCP 80,443
 ```bash
 $ ansible-playbook -i ./hosts portchecker.yaml -v -e '{tcp_ports: [80,443]}'
