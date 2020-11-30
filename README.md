@@ -1,6 +1,6 @@
 Portchecker is an ansible playbook that helps with bulk ICMP/TCP/UDP/HTTP(S) availability checks. For example, it can be used as a deploy prerequisite step, to see if all necessary firewall rules were set and communication is possible.
 
-How it works. Each host from 'source' inventory group tries communicating with each host from 'target' inventory group using ping (ICMP), netcat (nc), nmap, curl. Some cases without using inventory are also possible, see examples below.
+How it works. Each host from 'source' inventory group tries communicating with each host from 'target' inventory group using ping (ICMP), netcat (TCP/UDP), nmap (UDP), curl (HTTP/HTTPS). Some cases without using inventory are also possible, see examples below.
 
 
 
