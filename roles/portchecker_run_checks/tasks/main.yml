@@ -38,7 +38,7 @@
   loop: "{{ nc_tcp.results }}"
 - set_fact:
     udp_error: True
-  when: item.rc != 0 or ((run_listeners is defined and run_listeners == True) and item.stdout != "udpOK")
+  when: item.rc != 0 or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
   loop: "{{ nc_udp.results }}"
 - set_fact:
     curl_error: True
@@ -58,7 +58,7 @@
 - name: show udp failed ports
   debug:
     msg: "FAILED PORT (UDP): the nc command ({{ item.cmd }}) has failed"
-  when: item.rc != 0 or ((run_listeners is defined and run_listeners == True) and item.stdout != "udpOK")
+  when: item.rc != 0 or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
   loop: "{{ nc_udp.results }}"
 - name: show failed curl gets
   debug:
