@@ -21,7 +21,7 @@
   ignore_errors: yes
 #- name: check udp ports (nmap check)
 #  shell: nmap -sU -p {{ item.1 }} {{ item.0 }} | | grep -E 'closed|filtered'
-#  when: do_nmap_udp is defined and do_nmap
+#  when: do_nmap_udp is defined and do_nmap_udp
 #  loop: "{{ target_nodes|product(udp_ports|default([]))|list }}"
 #  register: nmap_udp
 #  ignore_errors: yes
