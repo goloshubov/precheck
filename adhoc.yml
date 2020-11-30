@@ -10,7 +10,7 @@
       vars:
         target_nodes:  "{{ groups['target1'] }}"
         udp_ports: [53]
-        do_nmap_udp: True
+        #do_nmap_udp: True
 
 - name: check registry is available
   hosts: source
