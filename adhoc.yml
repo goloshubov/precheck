@@ -22,7 +22,7 @@
         do_curl: True
         curl_ports: [5000]
 
-- name: check yum repo http server is available
+- name: check http server is available
   hosts: source
   tasks:
     - import_role:
@@ -31,6 +31,8 @@
         target_nodes:  "{{ groups['target3'] }}"
         do_curl: True
         curl_ports: [80]
+
+# etc ...
 
 - name: check for errors
   hosts: source
