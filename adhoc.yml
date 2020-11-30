@@ -34,7 +34,7 @@
 
 # etc ...
 
-- name: check for errors
+- name: check for errors (fail if any)
   hosts: source
   tasks:
     - import_role:
