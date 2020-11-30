@@ -19,7 +19,7 @@
         name: portchecker_run_checks
       vars:
         target_nodes:  "{{ target_list is defined | ternary( target_list , groups[target_groupname | default('target')] ) }}"
-        #tcp_ports: [123,53]
+        #...
 
   #cleanup if listeners were used. can be skipped with do_cleanup=False
 - name: cleanup
