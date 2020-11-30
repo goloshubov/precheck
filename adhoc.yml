@@ -1,0 +1,38 @@
+
+- name: check dns is available
+  hosts: source
+  tasks:
+    - import_role:
+        name: portchecker_run_checks
+      vars:
+        target_nodes:  "{{ groups['target'] }}"
+        udp_ports: [53]
+        do_nmap_udp: True
+
+- name: check registry is available
+  hosts: source
+  tasks:
+    - import_role:
+        name: portchecker_run_checks
+      vars:
+        target_nodes:  "{{ groups['target'] }}"
+        do_curl: True
+        curl_ports: [5000]
+
+- name: check yum repo http server is available
+  hosts: source
+  tasks:
+    - import_role:
+        name: portchecker_run_checks
+      vars:
+        target_nodes:  "{{ groups['target'] }}"
+        do_curl: True
+        curl_ports: [80]
+
+- name: check for errors
+  hosts: source
+  tasks:
+    - import_role:
+        name: portchecker_check_errors
+
+

@@ -5,8 +5,8 @@ localhost
 #node3
 
 [target]
+localhost
 #host.example.com
-ya.ru
 #newnode1
 #newnode2
 #newnode3
