@@ -49,7 +49,7 @@
   loop: "{{ nc_udp.results }}"
 #- set_fact:
 #    udp2_error: True
-#  when: item.rc == 0
+#  when: (do_nmap_udp is defined and do_nmap_udp) and item.rc == 0
 #  loop: "{{ nmap_udp.results }}"
 - set_fact:
     curl_error: True
@@ -74,7 +74,7 @@
 #- name: show udp failed ports (nmap check)
 #  debug:
 #    msg: "FAILED PORT (UDP): the nmap command ({{ item.cmd }}) has failed"
-#  when: item.rc == 0
+#  when: (do_nmap_udp is defined and do_nmap_udp) and item.rc == 0
 #  loop: "{{ nmap_udp.results }}"
 - name: show failed curl gets
   debug:
