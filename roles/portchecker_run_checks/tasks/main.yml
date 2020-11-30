@@ -4,6 +4,7 @@
 - set_fact:
     tcp_error: False
     udp_error: False
+    #udp2_error: False
     curl_error: False
     ping_error: False
 
@@ -18,6 +19,12 @@
   loop: "{{ target_nodes|product(udp_ports|default([]))|list }}"
   register: nc_udp
   ignore_errors: yes
+#- name: check udp ports (nmap check)
+#  shell: nmap -sU -p {{ item.1 }} {{ item.0 }} | | grep -E 'closed|filtered'
+#  loop: "{{ target_nodes|product(udp_ports|default([]))|list }}"
+#  register: nmap_udp
+#  ignore_errors: yes
+
 - name: curl check
   shell: curl {{ curl_opts | default("-k -m5") }} {{ curl_protocol | default("https") }}://{{ item.0 }}:{{ item.1 }}
   when: do_curl is defined and do_curl
@@ -40,6 +47,10 @@
     udp_error: True
   when: item.rc != 0 or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
   loop: "{{ nc_udp.results }}"
+#- set_fact:
+#    udp2_error: True
+#  when: item.rc == 0
+#  loop: "{{ nmap_udp.results }}"
 - set_fact:
     curl_error: True
   when: (do_curl is defined and do_curl) and item.rc != 0
@@ -60,6 +71,11 @@
     msg: "FAILED PORT (UDP): the nc command ({{ item.cmd }}) has failed"
   when: item.rc != 0 or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
   loop: "{{ nc_udp.results }}"
+#- name: show udp failed ports (nmap check)
+#  debug:
+#    msg: "FAILED PORT (UDP): the nmap command ({{ item.cmd }}) has failed"
+#  when: item.rc == 0
+#  loop: "{{ nmap_udp.results }}"
 - name: show failed curl gets
   debug:
     msg: "FAILED CURL: the curl command ({{ item.cmd }}) has failed"
