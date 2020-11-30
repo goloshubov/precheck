@@ -32,6 +32,7 @@ curl_protocol="https" (default)
 curl_opts="-k -m5" (default)
 curl_ports=[443]   (default)
 do_ping=False
+#do_nmap_udp=False
 ```
 
 Define 'source' and 'target' groups, and all needed variables ([all:vars] section) in the inventory file and run the play:
