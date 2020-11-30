@@ -24,18 +24,18 @@ source_list=[sourcehostA, sourcehostB, ...]
 target_list=[targethostA, targethostB, ...]
 #Notice that netcat listeners (run_listeners) can't be used when target_list is defined.
 #tcp udp (command line option: -e '{tcp_ports: [port1,port2,...]}' )
-tcp_ports=[22,443, ...]  (default is [])
-udp_ports=[53, ...]      (default is [])
-#do_nmap_udp=False       (default)
+tcp_ports=[22,443, ...]
+udp_ports=[53, ...]
+#do_nmap_udp=False
 #listeners
-run_listeners=False (default)
+run_listeners=False
 do_cleanup=True  (True by default when run_listeners=True)
 #curl
 do_curl=False
 curl_protocol="https" (default)
 curl_opts="-k -m5" (default)
 curl_ports=[443]   (default)
-do_ping=False      (default)
+do_ping=False
 ```
 
 Define 'source' and 'target' groups, and all needed variables ([all:vars] section) in the inventory file and run the play:
