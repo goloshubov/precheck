@@ -1,4 +1,7 @@
 
+# Example usage in playbooks
+
+
 - name: check dns is available
   hosts: source
   tasks:
