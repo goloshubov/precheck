@@ -7,7 +7,7 @@ How it works. Each host from 'source' inventory group tries communicating with e
 Usage:
 \
 (Example usage in playbooks is in adhoc.yml)
-\
+
 ```bash
 $ git clone
 $ cd portchecker
