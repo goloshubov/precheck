@@ -1,0 +1,74 @@
+---
+
+#init values
+- set_fact:
+    tcp_error: False
+    udp_error: False
+    curl_error: False
+    ping_error: False
+
+  #run checks
+- name: check tcp ports
+  shell: nc -z {{ item.0 }} {{ item.1 }}
+  loop: "{{ target_nodes|product(tcp_ports|default([]))|list }}"
+  register: nc_tcp
+  ignore_errors: yes
+- name: check udp ports
+  shell: nc -zu {{ item.0 }} {{ item.1 }}
+  loop: "{{ target_nodes|product(udp_ports|default([]))|list }}"
+  register: nc_udp
+  ignore_errors: yes
+- name: curl check
+  shell: curl {{ curl_opts | default("-k -m5") }} {{ curl_protocol | default("https") }}://{{ item.0 }}:{{ item.1 }}
+  when: do_curl is defined and do_curl
+  loop: "{{ target_nodes|product(curl_ports|default([443]))|list }}"
+  register: curl_get
+  ignore_errors: yes
+- name: ping (ICMP) check
+  shell: ping -c 3 {{ item }}
+  when: do_ping is defined and do_ping
+  loop: "{{ target_nodes }}"
+  register: ping_retval
+  ignore_errors: yes
+
+  #set host facts on check errors
+- set_fact:
+    tcp_error: True
+  when: item.rc != 0
+  loop: "{{ nc_tcp.results }}"
+- set_fact:
+    udp_error: True
+  when: item.rc != 0 or ((run_listeners is defined and run_listeners == True) and item.stdout != "udpOK")
+  loop: "{{ nc_udp.results }}"
+- set_fact:
+    curl_error: True
+  when: (do_curl is defined and do_curl) and item.rc != 0
+  loop: "{{ curl_get.results }}"
+- set_fact:
+    ping_error: True
+  when: (do_ping is defined and do_ping) and item.rc != 0
+  loop: "{{ ping_retval.results }}"
+
+  #print failed checks
+- name: show tcp failed ports
+  debug:
+    msg: "FAILED PORT (TCP): the nc command ({{ item.cmd }}) has failed"
+  when: item.rc != 0
+  loop: "{{ nc_tcp.results }}"
+- name: show udp failed ports
+  debug:
+    msg: "FAILED PORT (UDP): the nc command ({{ item.cmd }}) has failed"
+  when: item.rc != 0 or ((run_listeners is defined and run_listeners == True) and item.stdout != "udpOK")
+  loop: "{{ nc_udp.results }}"
+- name: show failed curl gets
+  debug:
+    msg: "FAILED CURL: the curl command ({{ item.cmd }}) has failed"
+  when: (do_curl is defined and do_curl) and item.rc != 0
+  loop: "{{ curl_get.results }}"
+- name: show failed pings
+  debug:
+    msg: "FAILED PING: the ping command ({{ item.cmd }}) has failed"
+  when: (do_ping is defined and do_ping) and item.rc != 0
+  loop: "{{ ping_retval.results }}"
+
+...

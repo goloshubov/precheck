@@ -1,0 +1,8 @@
+---
+
+- name: cleanup nc (kills only nc listeners)
+  shell: pkill -f -9 'nc -l'
+  ignore_errors: yes
+  when: (do_cleanup is defined and do_cleanup) or (do_cleanup is undefined and run_listeners is defined and run_listeners)
+
+...

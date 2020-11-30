@@ -1,0 +1,9 @@
+---
+
+- fail:
+    msg: "FAILED"
+  when: hostvars[inventory_hostname]['tcp_error'] == True or hostvars[inventory_hostname]['udp_error'] == True or hostvars[inventory_hostname]['curl_error'] == True or hostvars[inventory_hostname]['ping_error'] == True
+
+
+
+...

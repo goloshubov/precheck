@@ -6,102 +6,20 @@
   gather_facts: no
   become_method: sudo
   tasks:
-    - name: kill running nc listeners (if any) before starting a new ones
-      shell: pkill -f -9 'nc -l'
-      ignore_errors: yes
-      when: run_listeners is defined and run_listeners
-    - name: run tcp listeners
-      shell: nohup nc -lk 0.0.0.0 {{ item }} >/dev/null 2>&1 &
-      loop: "{{ tcp_ports | default([]) }}"
-      when: run_listeners is defined and run_listeners
-    - name: run udp listeners
-      shell: nohup nc -lku 0.0.0.0 {{ item }} --sh-exec 'echo udpOK' >/dev/null 2>&1 &
-      loop: "{{ udp_ports | default([]) }}"
-      when: run_listeners is defined and run_listeners
-    # TODO: 
-    #- name: run http listeners 
-    # maybe 'python -m SimpleHTTPServer 8000' or 'python3 -m http.server 8000'
-
+    - import_role:
+        name: portchecker_run_listeners
 
   #check ports on target nodes from source nodes (tcp/udp, http)
 - name: run checks
   hosts: "{{ source_list is defined | ternary( source_list , source_groupname | default('source')) }}"
   gather_facts: no 
   become_method: sudo
-  vars:
-    target_nodes:  "{{ target_list is defined | ternary( target_list , groups[target_groupname | default('target')] ) }}"
   tasks:
-      #init values
-    - set_fact:
-        tcp_error: False
-        udp_error: False
-        curl_error: False
-        ping_error: False
-
-      #run checks
-    - name: check tcp ports
-      shell: nc -z {{ item.0 }} {{ item.1 }}
-      loop: "{{ target_nodes|product(tcp_ports|default([]))|list }}"
-      register: nc_tcp
-      ignore_errors: yes      
-    - name: check udp ports
-      shell: nc -zu {{ item.0 }} {{ item.1 }}
-      loop: "{{ target_nodes|product(udp_ports|default([]))|list }}"
-      register: nc_udp
-      ignore_errors: yes
-    - name: curl check
-      shell: curl {{ curl_opts | default("-k -m5") }} {{ curl_protocol | default("https") }}://{{ item.0 }}:{{ item.1 }}
-      when: do_curl is defined and do_curl
-      loop: "{{ target_nodes|product(curl_ports|default([443]))|list }}"      
-      register: curl_get
-      ignore_errors: yes
-    - name: ping (ICMP) check
-      shell: ping -c 3 {{ item }}
-      when: do_ping is defined and do_ping
-      loop: "{{ target_nodes }}"
-      register: ping_retval
-      ignore_errors: yes
-
-      #set host facts on check errors
-    - set_fact:
-        tcp_error: True
-      when: item.rc != 0
-      loop: "{{ nc_tcp.results }}"
-    - set_fact:
-        udp_error: True
-      when: item.rc != 0 or ((run_listeners is defined and run_listeners == True) and item.stdout != "udpOK")
-      loop: "{{ nc_udp.results }}"
-    - set_fact:
-        curl_error: True
-      when: (do_curl is defined and do_curl) and item.rc != 0
-      loop: "{{ curl_get.results }}"      
-    - set_fact:
-        ping_error: True
-      when: (do_ping is defined and do_ping) and item.rc != 0
-      loop: "{{ ping_retval.results }}"      
-
-      #print failed checks
-    - name: show tcp failed ports
-      debug:
-        msg: "FAILED PORT (TCP): the nc command ({{ item.cmd }}) has failed"
-      when: item.rc != 0
-      loop: "{{ nc_tcp.results }}"
-    - name: show udp failed ports
-      debug:
-        msg: "FAILED PORT (UDP): the nc command ({{ item.cmd }}) has failed"
-      when: item.rc != 0 or ((run_listeners is defined and run_listeners == True) and item.stdout != "udpOK")
-      loop: "{{ nc_udp.results }}"
-    - name: show failed curl gets
-      debug:
-        msg: "FAILED CURL: the curl command ({{ item.cmd }}) has failed"
-      when: (do_curl is defined and do_curl) and item.rc != 0
-      loop: "{{ curl_get.results }}"      
-    - name: show failed pings
-      debug:
-        msg: "FAILED PING: the ping command ({{ item.cmd }}) has failed"
-      when: (do_ping is defined and do_ping) and item.rc != 0
-      loop: "{{ ping_retval.results }}"      
-
+    - import_role:
+        name: portchecker_run_checks
+      vars:
+        target_nodes:  "{{ target_list is defined | ternary( target_list , groups[target_groupname | default('target')] ) }}"
+        #tcp_ports: [123,53]
 
   #cleanup if listeners were used. can be skipped with do_cleanup=False
 - name: cleanup
@@ -109,19 +27,14 @@
   gather_facts: no
   become_method: sudo
   tasks:
-    - name: cleanup nc (kills only nc listeners)
-      shell: pkill -f -9 'nc -l'
-      ignore_errors: yes
-      when: (do_cleanup is defined and do_cleanup) or (do_cleanup is undefined and run_listeners is defined and run_listeners)
-
+    - import_role:
+        name: portchecker_run_cleanup
 
   # fail if there were errors during the checks
 - name: fail on errors
   hosts: "{{ source_list is defined | ternary( source_list , source_groupname | default('source')) }}"
   gather_facts: no
   tasks:
-    - fail:
-        msg: "FAILED"
-      when: hostvars[inventory_hostname]['tcp_error'] == True or hostvars[inventory_hostname]['udp_error'] == True or hostvars[inventory_hostname]['curl_error'] == True or hostvars[inventory_hostname]['ping_error'] == True
-
+    - import_role:
+        name: portchecker_check_errors
 

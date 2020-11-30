@@ -22,4 +22,4 @@ ya.ru
 ##curl_protocol="https"
 ##curl_opts="-k -m5"
 ##curl_ports=[443]
-do_ping=True
+#do_ping=True
