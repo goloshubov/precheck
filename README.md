@@ -5,6 +5,8 @@ How it works. Each host from 'source' inventory group tries communicating with e
 
 
 Usage:
+(Example usage in playbooks is in adhoc.yml)
+\
 ```bash
 $ git clone
 $ cd portchecker
@@ -92,8 +94,4 @@ $ cat targetdata | while IFS=';' read -r hosts ports; do ansible-playbook -i ./s
 ```
 \
 \
-To make plays output more readable add display_skipped_hosts = no into the default section of ansible.cfg.
-\
-\
-Example usage in playbooks is in adhoc.yml
-
+To make plays output more readable add display_skipped_hosts = no into the default section of ansible.cfg
