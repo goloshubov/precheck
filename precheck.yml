@@ -7,7 +7,7 @@
   become_method: sudo
   tasks:
     - import_role:
-        name: run_listeners
+        name: run_nc_listeners
 
   # check ports on target nodes from source nodes (tcp/udp, http)
 - name: run checks
@@ -16,7 +16,7 @@
   become_method: sudo
   tasks:
     - import_role:
-        name: run_checks
+        name: run_common_checks
       vars:
         target_nodes:  "{{ target_list is defined | ternary( target_list , groups[target_groupname | default('target')] ) }}"
         #...
@@ -28,7 +28,7 @@
   become_method: sudo
   tasks:
     - import_role:
-        name: run_cleanup
+        name: stop_nc_listeners
 
   # fail if there were errors during the checks
 - name: fail on errors
