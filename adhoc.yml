@@ -8,6 +8,11 @@
     - import_role:
         name: tcp_check
       vars:
+        target_nodes:  "{{ groups['target0'] }}"
+        tcp_ports: [22]
+    - import_role:
+        name: udp_check
+      vars:
         target_nodes:  "{{ groups['target1'] }}"
         udp_ports: [53]
         do_nmap_udp: True
