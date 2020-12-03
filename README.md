@@ -26,7 +26,7 @@ target_list=[targethostA, targethostB, ...]
 #tcp udp (command line option: -e '{tcp_ports: [port1,port2,...]}' )
 tcp_ports=[22,443, ...]
 udp_ports=[53, ...]
-#do_nmap_udp=False
+do_nmap_udp=False
 #listeners
 run_listeners=False
 do_cleanup=True  (True by default when run_listeners=True)
