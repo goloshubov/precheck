@@ -65,7 +65,7 @@ $ ansible-playbook -i ./hosts precheck.yml -v -e do_curl=True -e curl_protocol=h
 ```
 - a combination
 ```bash
-$ ansible-playbook -i ./hosts precheck.yml -v -e '{tcp_ports: [53,123]}' -e '{udp_ports: [53,123]}' -e do_curl=True -e curl_protocol=http -e '{curl_ports: [80,8080]}'
+$ ansible-playbook -i ./hosts precheck.yml -v -e '{tcp_ports: [53,123]}' -e '{udp_ports: [53,123]}' -e do_curl=True -e curl_protocol=https -e '{curl_ports: [8443,8123]}'
 ```
 - tcp port check with running listeners (nc -l) on target hosts (ssh access on target hosts is required)\
 ```bash
