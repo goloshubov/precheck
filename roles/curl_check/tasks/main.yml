@@ -5,12 +5,12 @@
     curl_error: False
 
 - name: curl check
-  shell: curl {{ curl_opts | default("-k -m5") }} {{ curl_protocol | default("https") }}://{{ item.0 }}:{{ item.1 }}
+  shell: curl {{ curl_opts | default("-k -m5") }} {{ curl_protocol | default("http") }}://{{ item.0 }}:{{ item.1 }}
   when: do_curl is defined and do_curl
-  loop: "{{ target_nodes|product(curl_ports|default([443]))|list }}"
+  loop: "{{ target_nodes|product(curl_ports|default([80]))|list }}"
   register: curl_get
   ignore_errors: yes
-    
+
 - set_fact:
     curl_error: True
   when: (do_curl is defined and do_curl) and item.rc != 0

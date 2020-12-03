@@ -34,7 +34,7 @@ do_cleanup=True  (True by default when run_listeners=True)
 do_curl=False
 curl_protocol="https" (default)
 curl_opts="-k -m5" (default)
-curl_ports=[443]   (default)
+curl_ports=[443]   (default == 80)
 do_ping=False
 ```
 
@@ -51,7 +51,7 @@ $ ansible-playbook -i ./hosts precheck.yml -v -e do_ping=True
 ```bash
 $ ansible-playbook -i ./hosts precheck.yml -v -e '{tcp_ports: [80,443]}'
 ```
-- curl check, https (443) - default
+- curl check, http (80) - default
 ```bash
 $ ansible-playbook -i ./hosts precheck.yml -v -e do_curl=True
 ```
@@ -59,9 +59,9 @@ $ ansible-playbook -i ./hosts precheck.yml -v -e do_curl=True
 ```bash
 $ ansible-playbook -i ./hosts1 -i ./hosts2 precheck.yml -v -e do_curl=True -e source_groupname=source1 -e target_groupname=target2
 ```
-- curl check, http (80)
+- curl check, https (443)
 ```bash
-$ ansible-playbook -i ./hosts precheck.yml -v -e do_curl=True -e curl_protocol=http -e '{curl_ports: [80]}'
+$ ansible-playbook -i ./hosts precheck.yml -v -e do_curl=True -e curl_protocol=https -e '{curl_ports: [443]}'
 ```
 - a combination
 ```bash
