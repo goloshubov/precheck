@@ -6,7 +6,7 @@
   hosts: source
   tasks:
     - import_role:
-        name: portchecker_run_checks
+        name: run_checks
       vars:
         target_nodes:  "{{ groups['target1'] }}"
         udp_ports: [53]
@@ -16,7 +16,7 @@
   hosts: source
   tasks:
     - import_role:
-        name: portchecker_run_checks
+        name: run_checks
       vars:
         target_nodes:  "{{ groups['target2'] }}"
         do_curl: True
@@ -26,7 +26,7 @@
   hosts: source
   tasks:
     - import_role:
-        name: portchecker_run_checks
+        name: run_checks
       vars:
         target_nodes:  "{{ groups['target3'] }}"
         do_curl: True
@@ -38,6 +38,6 @@
   hosts: source
   tasks:
     - import_role:
-        name: portchecker_check_errors
+        name: check_errors
 
 
