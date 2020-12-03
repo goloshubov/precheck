@@ -4,15 +4,8 @@ How it works. Each host from 'source' inventory group tries communicating with e
 
 
 
-Usage:
-\
-(Example usage in playbooks is in adhoc.yml)
 
-```bash
-$ git clone
-$ cd precheck
-$ vim hosts
-```
+
 
 ```ini
 Variables (options):
@@ -37,6 +30,10 @@ curl_opts="-k -m5" (default)
 curl_ports=[443]   (default == 80)
 do_ping=False
 ```
+
+Usage:
+A. roles in playbooks (e.g. adhoc.yml)
+B. precheck.yml playbook:
 
 Define 'source' and 'target' groups, and all needed variables ([all:vars] section) in the inventory file and run the play:
 ```bash
