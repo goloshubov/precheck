@@ -1,0 +1,27 @@
+---
+
+#init values
+- set_fact:
+    curl_error: False
+
+- name: curl check
+  shell: curl {{ curl_opts | default("-k -m5") }} {{ curl_protocol | default("https") }}://{{ item.0 }}:{{ item.1 }}
+  when: do_curl is defined and do_curl
+  loop: "{{ target_nodes|product(curl_ports|default([443]))|list }}"
+  register: curl_get
+  ignore_errors: yes
+    
+- set_fact:
+    curl_error: True
+  when: (do_curl is defined and do_curl) and item.rc != 0
+  loop: "{{ curl_get.results }}"
+
+  #print failed checks
+- name: show failed curl gets
+  debug:
+    msg: "FAILED CURL: the curl command ({{ item.cmd }}) has failed"
+  when: (do_curl is defined and do_curl) and item.rc != 0
+  loop: "{{ curl_get.results }}"
+
+
+...

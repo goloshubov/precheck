@@ -12,14 +12,20 @@
   # check ports on target nodes from source nodes (tcp/udp, http)
 - name: run checks
   hosts: "{{ source_list is defined | ternary( source_list , source_groupname | default('source')) }}"
-  gather_facts: no 
+  gather_facts: no
   become_method: sudo
+  vars:
+    target_nodes:  "{{ target_list is defined | ternary( target_list , groups[target_groupname | default('target')] ) }}"
   tasks:
     - import_role:
-        name: run_common_checks
-      vars:
-        target_nodes:  "{{ target_list is defined | ternary( target_list , groups[target_groupname | default('target')] ) }}"
-        #...
+        name: ping_check
+    - import_role:
+        name: tcp_check
+    - import_role:
+        name: udp_check
+    - import_role:
+        name: curl_check
+    #...
 
   # cleanup if listeners were used. can be skipped with do_cleanup=False
 - name: cleanup
@@ -37,4 +43,3 @@
   tasks:
     - import_role:
         name: check_errors
-

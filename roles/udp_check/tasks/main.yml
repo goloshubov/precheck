@@ -1,0 +1,43 @@
+---
+
+#init values
+- set_fact:
+    udp_error: False
+    udp2_error: False
+
+  #run checks
+- name: check udp ports
+  shell: nc -zu {{ item.0 }} {{ item.1 }}
+  loop: "{{ target_nodes|product(udp_ports|default([]))|list }}"
+  register: nc_udp
+  ignore_errors: yes
+- name: check udp ports (nmap check)
+  shell: nmap -sU -p {{ item.1 }} {{ item.0 }} | | grep -E 'closed|filtered'
+  when: do_nmap_udp is defined and do_nmap_udp
+  loop: "{{ target_nodes|product(udp_ports|default([]))|list }}"
+  register: nmap_udp
+  ignore_errors: yes
+
+  #set host facts on check errors
+- set_fact:
+    udp_error: True
+  when: item.rc != 0 or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
+  loop: "{{ nc_udp.results }}"
+- set_fact:
+    udp2_error: True
+  when: (do_nmap_udp is defined and do_nmap_udp) and item.rc == 0
+  loop: "{{ nmap_udp.results }}"
+
+  #print failed checks
+- name: show udp failed ports
+  debug:
+    msg: "FAILED PORT (UDP): the nc command ({{ item.cmd }}) has failed"
+  when: item.rc != 0 or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
+  loop: "{{ nc_udp.results }}"
+- name: show udp failed ports (nmap check)
+  debug:
+    msg: "FAILED PORT (UDP): the nmap command ({{ item.cmd }}) has failed"
+  when: (do_nmap_udp is defined and do_nmap_udp) and item.rc == 0
+  loop: "{{ nmap_udp.results }}"
+
+...
