@@ -33,6 +33,7 @@ do_ping=False
 
 Usage:
 A. roles in playbooks (e.g. adhoc.yml)
+\
 B. precheck.yml playbook:
 
 Define 'source' and 'target' groups, and all needed variables ([all:vars] section) in the inventory file and run the play:
