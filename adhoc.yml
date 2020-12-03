@@ -14,23 +14,14 @@
         name: udp_check
       vars:
         target_nodes:  "{{ groups['target1'] }}"
-        udp_ports: [53]
+        udp_ports: [53,123]
         do_nmap_udp: True
     - import_role:
         name: curl_check
       vars:
         target_nodes:  "{{ groups['target2'] }}"
         do_curl: True
-        curl_ports: [80]
-    - import_role:
-        name: curl_check
-      vars:
-        target_nodes:  "{{ groups['target3'] }}"
-        do_curl: True
-        curl_ports: [443]
-        curl_protocol: https
-
-# etc ...
+        curl_ports: [80,8080,9090]
 
 - name: check for errors (fail if any)
   hosts: source
