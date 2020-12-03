@@ -2,7 +2,7 @@
 # Example usage in playbooks
 
 
-- name: check dns is available
+- name: test
   hosts: source
   tasks:
     - import_role:
