@@ -16,6 +16,7 @@ target_groupname=target (default)
 source_list=[sourcehostA, sourcehostB, ...]
 target_list=[targethostA, targethostB, ...]
 #Notice that netcat listeners (run_listeners) can't be used when target_list is defined.
+do_ping=True
 #tcp udp (command line option: -e '{tcp_ports: [port1,port2,...]}' )
 tcp_ports=[22,443, ...]
 udp_ports=[53, ...]
@@ -24,11 +25,9 @@ do_nmap_udp=False
 run_listeners=False
 do_cleanup=True  (True by default when run_listeners=True)
 #curl
-do_curl=False
-curl_protocol="https" (default)
+curl_protocol="http" (default)
 curl_opts="-k -m5" (default)
-curl_ports=[443]   (default == 80)
-do_ping=False
+curl_ports=[80]
 ```
 
 Usage:
@@ -50,21 +49,21 @@ $ ansible-playbook -i ./hosts precheck.yml -v -e do_ping=True
 ```bash
 $ ansible-playbook -i ./hosts precheck.yml -v -e '{tcp_ports: [80,443]}'
 ```
-- curl check, http (80) - default
+- curl check, http (80)
 ```bash
-$ ansible-playbook -i ./hosts precheck.yml -v -e do_curl=True
+$ ansible-playbook -i ./hosts precheck.yml -v -e '{curl_ports: [80]}'
 ```
 - the same as above but with custom host groups (and from different inventories)
 ```bash
-$ ansible-playbook -i ./hosts1 -i ./hosts2 precheck.yml -v -e do_curl=True -e source_groupname=source1 -e target_groupname=target2
+$ ansible-playbook -i ./hosts1 -i ./hosts2 precheck.yml -v -e source_groupname=source1 -e target_groupname=target2 -e '{curl_ports: [80]}'
 ```
 - curl check, https (443)
 ```bash
-$ ansible-playbook -i ./hosts precheck.yml -v -e do_curl=True -e curl_protocol=https -e '{curl_ports: [443]}'
+$ ansible-playbook -i ./hosts precheck.yml -v -e curl_protocol=https -e '{curl_ports: [443]}'
 ```
 - a combination
 ```bash
-$ ansible-playbook -i ./hosts precheck.yml -v -e '{tcp_ports: [53,123]}' -e '{udp_ports: [53,123]}' -e do_curl=True -e curl_protocol=https -e '{curl_ports: [8443,8123]}'
+$ ansible-playbook -i ./hosts precheck.yml -v -e '{tcp_ports: [53,123]}' -e '{udp_ports: [53,123]}' -e curl_protocol=https -e '{curl_ports: [8443,8123]}'
 ```
 - tcp port check with running listeners (nc -l) on target hosts (ssh access on target hosts is required)\
 ```bash
