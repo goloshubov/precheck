@@ -4,20 +4,20 @@
 - set_fact:
     tcp_error: False
 
-  #run checks
+#run checks
 - name: check tcp ports
   shell: nc -z {{ item.0 }} {{ item.1 }}
   loop: "{{ target_nodes|product(tcp_ports|default([]))|list }}"
   register: nc_tcp
   ignore_errors: yes
 
-  #set host facts on check errors
+#set host facts on check errors
 - set_fact:
     tcp_error: True
   when: item.rc != 0
   loop: "{{ nc_tcp.results }}"
 
-  #print failed checks
+#print failed checks
 - name: show tcp failed ports
   debug:
     msg: "FAILED PORT (TCP): the nc command ({{ item.cmd }}) has failed"

@@ -4,6 +4,7 @@
 - set_fact:
     curl_error: False
 
+#run checks
 - name: curl check
   shell: curl {{ curl_opts | default("-k -m5") }} {{ curl_protocol | default("http") }}://{{ item.0 }}:{{ item.1 }}
   when: do_curl is defined and do_curl
@@ -11,12 +12,13 @@
   register: curl_get
   ignore_errors: yes
 
+#set host facts on check errors
 - set_fact:
     curl_error: True
   when: (do_curl is defined and do_curl) and item.rc != 0
   loop: "{{ curl_get.results }}"
 
-  #print failed checks
+#print failed checks
 - name: show failed curl gets
   debug:
     msg: "FAILED CURL: the curl command ({{ item.cmd }}) has failed"
