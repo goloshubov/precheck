@@ -32,6 +32,7 @@ do_ping=False
 ```
 
 Usage:
+\
 A. roles in playbooks (e.g. adhoc.yml)
 \
 B. precheck.yml playbook:
