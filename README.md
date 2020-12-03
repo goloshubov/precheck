@@ -33,7 +33,7 @@ do_ping=False
 
 Usage:
 \
-A. roles in playbooks (e.g. adhoc.yml)
+A. roles in playbooks (example - adhoc.yml)
 \
 B. precheck.yml playbook:
 
@@ -92,6 +92,5 @@ $ cat /path/targetdata
 ```bash
 $ cat targetdata | while IFS=';' read -r hosts ports; do ansible-playbook -i ./sourcehosts precheck.yml -e "{target_list: [ $hosts ]}" -e "{tcp_ports: [ $ports ]}"; done
 ```
-\
 \
 To make plays output more readable add display_skipped_hosts = no into the default section of ansible.cfg
