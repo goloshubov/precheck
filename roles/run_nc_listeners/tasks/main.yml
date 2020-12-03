@@ -12,7 +12,5 @@
   shell: nohup nc -lku 0.0.0.0 {{ item }} --sh-exec 'echo udpOK' >/dev/null 2>&1 &
   loop: "{{ udp_ports | default([]) }}"
   when: run_listeners is defined and run_listeners
-# TODO:- name: run http listeners
-# maybe 'python -m SimpleHTTPServer 8000' or 'python3 -m http.server 8000'
 
 ...
