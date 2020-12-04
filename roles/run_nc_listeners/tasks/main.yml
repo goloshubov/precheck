@@ -1,13 +1,15 @@
 ---
 
-- name: kill running nc listeners (if any) before starting a new ones
+- name: stop running nc listeners (if any) before starting a new ones
   shell: pkill -f -9 'nc -l'
   ignore_errors: yes
   when: run_listeners is defined and run_listeners
+
 - name: run tcp listeners
   shell: nohup nc -lk 0.0.0.0 {{ item }} >/dev/null 2>&1 &
   loop: "{{ tcp_ports | default([]) }}"
   when: run_listeners is defined and run_listeners
+
 - name: run udp listeners
   shell: nohup nc -lku 0.0.0.0 {{ item }} --sh-exec 'echo udpOK' >/dev/null 2>&1 &
   loop: "{{ udp_ports | default([]) }}"
