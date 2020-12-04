@@ -16,7 +16,7 @@ target_groupname=target (default)
 source_list=[sourcehostA, sourcehostB, ...]
 target_list=[targethostA, targethostB, ...]
 #Notice that netcat listeners (run_listeners) can't be used when target_list is defined.
-do_ping=True
+do_ping=True  (default)
 #tcp udp (command line option: -e '{tcp_ports: [port1,port2,...]}' )
 tcp_ports=[22,443, ...]
 udp_ports=[53, ...]
@@ -36,15 +36,11 @@ A. roles in playbooks (example - adhoc.yml)
 \
 B. precheck.yml playbook:
 
-Define 'source' and 'target' groups, and all needed variables ([all:vars] section) in the inventory file and run the play:
+Define 'source' and 'target' groups, and all needed variables ([all:vars] section) in the inventory file and run the play (ICMP ping check is enabled by default):
 ```bash
 $ ansible-playbook -i ./hosts precheck.yml -v
 ```
 Or use extra variables instead, or combination of both:
-- ping (ICMP)
-```bash
-$ ansible-playbook -i ./hosts precheck.yml -v -e do_ping=True
-```
 - tcp port check, TCP 80,443
 ```bash
 $ ansible-playbook -i ./hosts precheck.yml -v -e '{tcp_ports: [80,443]}'
