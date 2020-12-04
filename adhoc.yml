@@ -31,7 +31,6 @@
         name: curl_check
       vars:
         target_nodes:  "{{ groups['target4'] }}"
-        do_curl: True
         curl_ports: [80,8080,9090]
 
 - name: check for errors (fail if any)
