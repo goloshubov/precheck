@@ -13,26 +13,31 @@
   register: nmap_udp
   ignore_errors: yes
 
+#show 'negative' value
+- name: show negative status (if True then return code will be inversed)
+  debug:
+    msg: "{{ negative|default('False') }}"
+
 #set host facts on check errors
 - set_fact:
     udp_error: True
-  when: item.rc != 0 or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
+  when: (negative|default('False') == 'True' | ternary ( item.rc == 0 , item.rc != 0)) or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
   loop: "{{ nc_udp.results }}"
 - set_fact:
     udp2_error: True
-  when: (do_nmap_udp|default('False') == 'True') and item.rc != 0
+  when: (do_nmap_udp|default('False') == 'True') and (negative|default('False') == 'True' | ternary ( item.rc == 0 , item.rc != 0))
   loop: "{{ nmap_udp.results }}"
 
 #print failed checks
 - name: show udp failed ports
   debug:
     msg: "FAILED PORT (UDP): the nc command ({{ item.cmd }}) has failed"
-  when: item.rc != 0 or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
+  when: (negative|default('False') == 'True' | ternary ( item.rc == 0 , item.rc != 0)) or ((run_listeners is defined and run_listeners) and item.stdout != "udpOK")
   loop: "{{ nc_udp.results }}"
 - name: show udp failed ports (nmap check)
   debug:
     msg: "FAILED PORT (UDP): the nmap command ({{ item.cmd }}) has failed"
-  when: (do_nmap_udp|default('False') == 'True') and item.rc != 0
+  when: (do_nmap_udp|default('False') == 'True') and (negative|default('False') == 'True' | ternary ( item.rc == 0 , item.rc != 0))
   loop: "{{ nmap_udp.results }}"
 
 ...

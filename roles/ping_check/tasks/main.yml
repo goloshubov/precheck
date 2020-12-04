@@ -8,17 +8,22 @@
   register: ping_retval
   ignore_errors: yes
 
+#show 'negative' value
+- name: show negative status (if True then return code will be inversed)
+  debug:
+    msg: "{{ negative|default('False') }}"
+
 #set host facts on check errors
 - set_fact:
     ping_error: True
-  when: (do_ping|default('True') == 'True') and item.rc != 0
+  when: (do_ping|default('True') == 'True') and (negative|default('False') == 'True' | ternary ( item.rc == 0 , item.rc != 0))
   loop: "{{ ping_retval.results }}"
 
 #print failed checks
 - name: show failed pings
   debug:
     msg: "FAILED PING: the ping command ({{ item.cmd }}) has failed"
-  when: (do_ping|default('True') == 'True') and item.rc != 0
+  when: (do_ping|default('True') == 'True') and (negative|default('False') == 'True' | ternary ( item.rc == 0 , item.rc != 0))
   loop: "{{ ping_retval.results }}"
 
 

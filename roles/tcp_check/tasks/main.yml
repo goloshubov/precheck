@@ -7,18 +7,23 @@
   register: nc_tcp
   ignore_errors: yes
 
+#show 'negative' value
+- name: show negative status (if True then return code will be inversed)
+  debug:
+    msg: "{{ negative|default('False') }}"
+
 #set host facts on check errors
 - name: set host facts on check errors
   set_fact:
     tcp_error: True
-  when: item.rc != 0
+  when: negative|default('False') == 'True' | ternary ( item.rc == 0 , item.rc != 0)
   loop: "{{ nc_tcp.results }}"
 
 #print failed checks
 - name: show tcp failed ports
   debug:
     msg: "FAILED PORT (TCP): the nc command ({{ item.cmd }}) has failed"
-  when: item.rc != 0
+  when: negative|default('False') == 'True' | ternary ( item.rc == 0 , item.rc != 0)
   loop: "{{ nc_tcp.results }}"
 
 ...

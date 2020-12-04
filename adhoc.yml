@@ -16,7 +16,7 @@
         name: ping_check
       vars:
         target_nodes:  "{{ groups['target1'] }}"
-        #target_nodes:  "{{ commaseparated-stringvar.split(',') }}"
+        #negative: True
     - import_role:
         name: tcp_check
       vars:
@@ -27,7 +27,7 @@
       vars:
         target_nodes:  "{{ groups['target3'] }}"
         udp_ports: [53,123]
-        do_nmap_udp: True
+        #do_nmap_udp: True
     - import_role:
         name: curl_check
       vars:
