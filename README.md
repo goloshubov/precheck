@@ -27,7 +27,7 @@ do_cleanup=True  (True by default when run_listeners=True)
 #curl
 curl_protocol="http" (default)
 curl_opts="-k -m5" (default)
-curl_ports=[80]
+curl_ports=[80,...]
 ```
 
 Usage:
