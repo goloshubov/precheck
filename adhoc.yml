@@ -16,7 +16,6 @@
         name: ping_check
       vars:
         target_nodes:  "{{ groups['target1'] }}"
-        do_ping: True
     - import_role:
         name: tcp_check
       vars:
