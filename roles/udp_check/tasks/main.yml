@@ -7,8 +7,8 @@
   register: nc_udp
   ignore_errors: yes
 - name: check udp ports (nmap check)
-  shell: nmap -sU -p {{ item.1 }} {{ item.0 }} | | grep -E 'closed|filtered'
-  when: do_nmap_udp is defined and do_nmap_udp
+  shell: nmap -sU -p {{ item.1 }} {{ item.0 }} | grep 'open'
+  when: do_nmap_udp|default('False') == 'True'
   loop: "{{ target_nodes|product(udp_ports|default([]))|list }}"
   register: nmap_udp
   ignore_errors: yes
@@ -20,7 +20,7 @@
   loop: "{{ nc_udp.results }}"
 - set_fact:
     udp2_error: True
-  when: (do_nmap_udp is defined and do_nmap_udp) and item.rc == 0
+  when: (do_nmap_udp|default('False') == 'True') and item.rc != 0
   loop: "{{ nmap_udp.results }}"
 
 #print failed checks
@@ -32,7 +32,7 @@
 - name: show udp failed ports (nmap check)
   debug:
     msg: "FAILED PORT (UDP): the nmap command ({{ item.cmd }}) has failed"
-  when: (do_nmap_udp is defined and do_nmap_udp) and item.rc == 0
+  when: (do_nmap_udp|default('False') == 'True') and item.rc != 0
   loop: "{{ nmap_udp.results }}"
 
 ...
