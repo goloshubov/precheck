@@ -9,7 +9,7 @@
     - import_role:
         name: init_values
 
-- name: test
+- name: checks
   hosts: source
   tasks:
     - import_role:
