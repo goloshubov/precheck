@@ -1,9 +1,5 @@
 ---
 
-#init values
-- set_fact:
-    tcp_error: False
-
 #run checks
 - name: check tcp ports
   shell: nc -z {{ item.0 }} {{ item.1 }}
@@ -12,7 +8,8 @@
   ignore_errors: yes
 
 #set host facts on check errors
-- set_fact:
+- name: set host facts on check errors
+  set_fact:
     tcp_error: True
   when: item.rc != 0
   loop: "{{ nc_tcp.results }}"

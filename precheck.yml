@@ -9,6 +9,15 @@
     - import_role:
         name: run_nc_listeners
 
+# init values
+- name: init values
+  hosts: "{{ source_list is defined | ternary( source_list , source_groupname | default('source')) }}"
+  gather_facts: no
+  become_method: sudo
+  tasks:
+    - import_role:
+        name: init_values
+
 # check ports on target nodes from source nodes (tcp/udp, http)
 - name: run checks
   hosts: "{{ source_list is defined | ternary( source_list , source_groupname | default('source')) }}"

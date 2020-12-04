@@ -1,0 +1,15 @@
+---
+
+#init values
+- name: init values
+  set_fact:
+    tcp_error: False
+    udp_error: False
+    udp2_error: False
+    curl_error: False
+    ping_error: False
+
+
+
+
+...

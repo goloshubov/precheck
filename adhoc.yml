@@ -1,6 +1,13 @@
 
 # Example usage in playbooks
 
+- name: init values
+  hosts: source
+  gather_facts: no
+  become_method: sudo
+  tasks:
+    - import_role:
+        name: init_values
 
 - name: test
   hosts: source

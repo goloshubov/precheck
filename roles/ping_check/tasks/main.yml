@@ -1,9 +1,5 @@
 ---
 
-#init values
-- set_fact:
-    ping_error: False
-
 #run checks
 - name: ping (ICMP) check
   shell: ping -c 3 {{ item }}

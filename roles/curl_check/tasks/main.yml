@@ -1,9 +1,5 @@
 ---
 
-#init values
-- set_fact:
-    curl_error: False
-
 #run checks
 - name: curl check
   shell: curl {{ curl_opts | default("-k -m5") }} {{ curl_protocol | default("http") }}://{{ item.0 }}:{{ item.1 }}
