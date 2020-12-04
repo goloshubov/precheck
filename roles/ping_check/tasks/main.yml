@@ -7,7 +7,7 @@
 #run checks
 - name: ping (ICMP) check
   shell: ping -c 3 {{ item }}
-  when: do_ping is defined and do_ping
+  when: do_ping is defined and do_ping=='True'
   loop: "{{ target_nodes }}"
   register: ping_retval
   ignore_errors: yes
@@ -15,14 +15,15 @@
 #set host facts on check errors
 - set_fact:
     ping_error: True
-  when: (do_ping is defined and do_ping) and item.rc != 0
+  when: (do_ping is defined and do_ping=='True') and item.rc != 0
   loop: "{{ ping_retval.results }}"
 
 #print failed checks
 - name: show failed pings
   debug:
     msg: "FAILED PING: the ping command ({{ item.cmd }}) has failed"
-  when: (do_ping is defined and do_ping) and item.rc != 0
+  when: (do_ping is defined and do_ping=='True') and item.rc != 0
   loop: "{{ ping_retval.results }}"
+
 
 ...
