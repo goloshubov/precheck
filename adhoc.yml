@@ -16,7 +16,7 @@
         name: ping_check
       vars:
         target_nodes:  "{{ groups['target1'] }}"
-        #target_nodes:  "{{ comma-separeted-stringvar.split(',') }}"
+        #target_nodes:  "{{ commaseparated-stringvar.split(',') }}"
     - import_role:
         name: tcp_check
       vars:
